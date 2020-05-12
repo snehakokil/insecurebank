@@ -1,4 +1,4 @@
-FROM tomcat:latest
+FROM tomcat:9-jdk8
 
 COPY *.war /usr/local/tomcat/webapps/
 
