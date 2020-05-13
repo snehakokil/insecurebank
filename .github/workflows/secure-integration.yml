@@ -29,10 +29,10 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: sast-scan
-      uses: AppThreat/sast-scan-action@1.0.2
-      with:
-        type: java 
+   # - name: sast-scan
+    #  uses: AppThreat/sast-scan-action@1.0.2
+     # with:
+      #  type: java 
 
     - name: Trigger Jenkins job
       uses: appleboy/jenkins-action@master
