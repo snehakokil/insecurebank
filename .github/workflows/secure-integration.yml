@@ -23,8 +23,8 @@ jobs:
     - uses: actions/checkout@v2
 
     # Builds Maven project
-    - name: Creating a maven build
-      uses: PrajjawalBanati/Java_Programs@0.0.1
+    #- name: Creating a maven build
+     # uses: PrajjawalBanati/Java_Programs@0.0.1
 
     - name: sast-scan
       uses: AppThreat/sast-scan-action@1.0.2
