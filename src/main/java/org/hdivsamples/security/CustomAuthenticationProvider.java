@@ -42,6 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("Bad Credentials");
 		}
 
+		String tempPassword = "pwd123";
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
 
