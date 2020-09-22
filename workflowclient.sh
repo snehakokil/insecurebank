@@ -1,1 +1,0 @@
-java -jar workflow_engine/WorkflowClient.jar --workflowengine.url="http://13.89.226.45:9091" --workflowengine.token="717386d1-4c2c-4f7e-ae61-20a2251d1148" --app.manifest.path=workflow_engine/ApplicationManifest.yml --sec.manifest.path=workflow_engine/SecurityManifest.yml
