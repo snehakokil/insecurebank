@@ -66,7 +66,7 @@ jobs:
     #  uses: github/codeql-action/analyze@v1
       
     - name: Load Workflow YAML 
-      run: sh ${{github.workspace}}/workflow_engine/loadVariables.sh ${{github.workspace}} ${{secrets.SLACK_CHANNEL_ID}} ${{secrets.SLACK_TOKEN}} ${{secrets.POLARIS_PROJECT_NAME}} ${{secrets.POLARIS_URL}} ${{secrets.POLARIS_TOKEN}}
+      run: sh ${{github.workspace}}/workflow_engine/loadVariables.sh ${{github.workspace}} ${{secrets.SLACK_CHANNEL_ID}} ${{secrets.SLACK_TOKEN}} ${{secrets.POLARIS_URL}} ${{secrets.POLARIS_TOKEN}}
       
     - name: Run Workflow Engine
       run: java -jar ${{github.workspace}}/workflow_engine/WorkflowClient.jar --workflowengine.url="${{secrets.WORKFLOWENGINE_URL}}" --workflowengine.token="${{secrets.WORKFLOWENGINE_TOKEN}}" --app.manifest.path=${{github.workspace}}/workflow_engine/app.yml --sec.manifest.path=${{github.workspace}}/workflow_engine/workflow.yml

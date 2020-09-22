@@ -39,6 +39,6 @@ tool_information:
 - tool_name: polaris
   enabled: true
   fields:
-    project_name: {{POLARIS_PROJECT_NAME}}
+    project_name: insecure-bank
     instance_url: {{POLARIS_URL}}
     auth_token: {{POLARIS_TOKEN}}
