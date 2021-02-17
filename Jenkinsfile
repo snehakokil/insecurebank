@@ -78,7 +78,7 @@ pipeline {
                     docker.image('insecurebank:latest').run('-d --name appcontainer -p 8181:8080')
                 
                     sleep 45
-                    sh 'wget http://localhost:8181'
+                    
                     sh 'wget http://localhost:8181/insecure-bank'
                     
                 }
