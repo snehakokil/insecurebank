@@ -1,10 +1,7 @@
 pipeline {
     agent any 
-
-    // If anything fails, the whole Pipeline stops.
-    stages {
-        
-        stage('Checkout'){
+    stages {       
+            stage('Checkout'){
             steps {
                 git(url: 'https://github.com/snehakokil/insecurebank.git', branch: 'master')
                 stash name:'Source', includes:'**/**'
@@ -22,12 +19,17 @@ pipeline {
                 } 
             }
             steps {
-                unstash 'Source'
-                sh 'mvn clean compile spotbugs:spotbugs' 
-                stash name:'CompiledSource', includes: '**/**'
-                archiveArtifacts '**/spotbugsXml.xml'
-                recordIssues(tools: [findBugs(pattern: '\'**/findbugsXml.xml', useRankAsPriority: true)])
-            }            
+                script {
+                    unstash 'Source'
+                    def isSuccess = sh label: '', returnStatus: true, script: 'mvn clean compile spotbugs:check'
+                    if(isSuccess > 0) {
+                        input 'SAST found bugs in the source code. Do you want to proceed?'
+                    }
+                        stash name:'CompiledSource', includes: '**/**'
+                        archiveArtifacts '**/spotbugsXml.xml'
+                        recordIssues(tools: [spotBugs(pattern: '**/spotbugsXml.xml', useRankAsPriority: true)])
+               }
+           }
         }
         
         stage('Build') {
@@ -46,15 +48,13 @@ pipeline {
         }
         
         stage('Build-Time SCA') {
-
             steps {
                 unstash 'WarFile'
-                dependencyCheck additionalArguments: '', odcInstallation: 'OWASP-DC'
- 
+                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
                 archiveArtifacts '**/dependency-check-report.xml'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }            
         }
-        
         stage('App Image Build and Test') {
             steps {
                 script {
@@ -65,27 +65,31 @@ pipeline {
                     docker.build('insecurebank:latest')
                     print 'App Image is built'
                     
-                    //Test using Aqua microscanner
-                    aquaMicroscanner imageName: 'insecurebank:latest', notCompliesCmd: '', onDisallowed: 'ignore', outputFormat: 'html'
-                
+		    //Test using Trivy
+                    try {
+                        sh 'trivy image -o trivy-results.txt --exit-code 1 insecurebank:latest'
+                        //sh 'trivy image -f json -o trivy-results.json --exit-code=1 insecurebank:latest'
+                    } 
+                    catch(err) {
+                        input 'Docker image is non-compliant. Do you want to proceed?'
+                    }                
+                    archiveArtifacts '**/trivy-results.txt'
                 }
             }
-        }
-        
+        }        
         stage('Deploy') {
             steps {
                 script {
                     docker.image('insecurebank:latest').run('-d --name appcontainer -p 8181:8080')
                 
                     sleep 45
-                    
                     sh 'wget http://localhost:8181/insecure-bank'
                     
                 }
             }
         }
         
-        stage('Test-time DAST'){
+        stage('Test-Time DAST'){
             agent {
                 docker {
                   image 'owasp/zap2docker-stable'
@@ -122,5 +126,7 @@ pipeline {
                 }
             }
         }
-    }
-}
+
+    }//stages
+
+}//pipeline
