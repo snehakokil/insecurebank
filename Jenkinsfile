@@ -101,14 +101,14 @@ pipeline {
                 script{
                     try {
                           //sh 'zap.sh -daemon -port 2375 -host 127.0.0.1 -config api.disablekey=true -config scanner.attackOnStart=true -config view.mode=attack -config connection.dnsTtlSuccessfulQueries=-1 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true &'
-                          sh 'zap-cli -p 2375 status -t 120 && zap-cli -p 2375 open-url http://localhost:8181/insecure-bank'
-                          sh 'zap-cli -p 2375 spider http://localhost:8181/insecure-bank'
-                          sh 'zap-cli -p 2375 active-scan -r http://localhost:8181/insecure-bank'
-                          sh 'zap-cli -p 2375 report --output-format html --output owasp-zap.html'
+                          //sh 'zap-cli -p 2375 status -t 120 && zap-cli -p 2375 open-url http://localhost:8181/insecure-bank'
+                          //sh 'zap-cli -p 2375 spider http://localhost:8181/insecure-bank'
+                          //sh 'zap-cli -p 2375 active-scan -r http://localhost:8181/insecure-bank'
+                          //sh 'zap-cli -p 2375 report --output-format html --output owasp-zap.html'
                           //sh 'zap-cli -p 8090 -v quick-scan -sc -o \'-config api.disablekey=true\' http://localhost:8082/ | tee zap.txt'
                           
                           echo 'zap complete'
-                          archiveArtifacts 'owasp-zap.html'
+                          //archiveArtifacts 'owasp-zap.html'
                           
                     }
                     catch (err) {
